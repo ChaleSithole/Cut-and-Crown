@@ -2,7 +2,7 @@
 
 A responsive website for a fictional Pretoria barber shop, with a full online booking flow and calendar export. Built with plain HTML, CSS and JavaScript. No frameworks, no build step, no backend.
 
-**Live site:** https://chalesithole.github.io/cut-and-crown/
+**Live site:** https://chalesithole.github.io/Cut-and-Crown/
 
 > Cut & Crown is a fictional business created for a practical assessment. The address, phone number, email and reviews are made up.
 
