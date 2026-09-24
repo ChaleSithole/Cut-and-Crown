@@ -19,6 +19,8 @@ const svc=id=>SVC.find(s=>s.id===id),barb=id=>BARB.find(b=>b.id===id);
 const p=n=>String(n).padStart(2,'0'),hm=m=>p(Math.floor(m/60))+':'+p(m%60);
 const iso=d=>`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const CFG=window.CC_CONFIG||{},LIVE=!!(CFG.url&&CFG.key);
+const rpc=async(fn,body)=>{const r=await fetch(`${CFG.url}/rest/v1/rpc/${fn}`,{method:'POST',headers:Object.assign({'Content-Type':'application/json',apikey:CFG.key},CFG.key.startsWith('eyJ')?{Authorization:'Bearer '+CFG.key}:{}),body:JSON.stringify(body)});if(!r.ok){const e=new Error('rpc '+r.status);e.status=r.status;throw e}return r.status===204?null:r.json()};
 const LOC='Cut & Crown Barbers, 214 Church Street, Arcadia, Pretoria, 0083';
 
 /* ---------- content ---------- */
@@ -55,7 +57,7 @@ const H=s=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))%9973;return h};
 const store=()=>{try{return JSON.parse(localStorage.getItem('ccBookings')||'[]')}catch{return[]}};
 const save=k=>{try{localStorage.setItem('ccBookings',JSON.stringify(store().concat(k)))}catch{}};
 const HRS=[[10,15],[9,18],[9,18],[9,18],[9,18],[9,18],[8,17]];
-const busy=(b,d,m)=>{const k=`${d}|${b}|${m}`;return H(k)%100<24||store().includes(k)};
+const busy=(b,d,m)=>LIVE?S.taken.has(`${b}|${m}`):(H(`${d}|${b}|${m}`)%100<24||store().includes(`${d}|${b}|${m}`));
 const isFree=(b,d,m,n)=>{for(let i=0;i<n;i++)if(busy(b,d,m+i*30))return false;return true};
 function slots(){
  const sv=svc(S.svc),[y,mo,da]=S.date.split('-').map(Number),o=HRS[new Date(y,mo-1,da).getDay()],n=Math.ceil(sv.m/30);
@@ -66,10 +68,18 @@ function slots(){
 }
 
 /* ---------- booking wizard ---------- */
-const blank=()=>({step:1,svc:null,barber:'any',date:'',time:null,f:{name:'',email:'',phone:'',notes:''},promo:'',done:null});
+const blank=()=>({step:1,svc:null,barber:'any',date:'',time:null,f:{name:'',email:'',phone:'',notes:''},promo:'',done:null,taken:new Set(),loading:false,notice:''});
 let S=blank();
 const reset=()=>{const promo=S.promo;S=blank();S.promo=promo};
 const root=$('#bk');
+async function load(){
+ if(!LIVE)return;
+ const dt=S.date;S.taken=new Set();if(!dt)return;
+ S.loading=true;S.notice=S.notice||'';bk();
+ try{const r=await rpc('taken_slots',{d:dt});if(S.date!==dt)return;S.taken=new Set(r.map(x=>`${x.barber}|${x.block}`))}
+ catch{if(S.date===dt)S.notice='We could not load live availability. Check your connection and choose the date again.'}
+ if(S.date===dt){S.loading=false;bk()}
+}
 function bk(jump){
  const bar=['Service','Barber','Date & time','Your details'].map((l,i)=>`<li class="${S.step===i+1?'on':S.step>i+1?'done':''}">${i+1}. ${l}</li>`).join('');
  let h='';
@@ -78,8 +88,9 @@ function bk(jump){
  if(S.step===3){
   const min=iso(new Date()),mx=new Date();mx.setDate(mx.getDate()+60);
   let t='';
-  if(S.date){const sl=slots();t=sl.some(x=>x.ok)?`<div class="opts times">${sl.map(x=>`<button type="button" class="opt" data-t="${x.m}" aria-pressed="${S.time===x.m}" ${x.ok?'':'disabled'}><span>${hm(x.m)}</span></button>`).join('')}</div>`:'<p class="err">No times left on this day. Try another date or barber.</p>'}
-  h=`<h2>Pick a date and time</h2><br><div class="f form"><label for="dt">Date</label><input type="date" id="dt" min="${min}" max="${iso(mx)}" value="${S.date}"></div>${t}<div class="nav2"><button class="btn ghost" data-go="2">Back</button><button class="btn" data-go="4" ${S.date&&S.time!=null?'':'disabled'}>Continue</button></div>`;
+  if(S.date&&S.loading)t='<p class="lead">Loading times…</p>';
+  else if(S.date){const sl=slots();t=sl.some(x=>x.ok)?`<div class="opts times">${sl.map(x=>`<button type="button" class="opt" data-t="${x.m}" aria-pressed="${S.time===x.m}" ${x.ok?'':'disabled'}><span>${hm(x.m)}</span></button>`).join('')}</div>`:'<p class="err">No times left on this day. Try another date or barber.</p>'}
+  h=`<h2>Pick a date and time</h2>${S.notice?`<p class="err" role="alert">${S.notice}</p>`:'<br>'}<div class="f form"><label for="dt">Date</label><input type="date" id="dt" min="${min}" max="${iso(mx)}" value="${S.date}"></div>${t}<div class="nav2"><button class="btn ghost" data-go="2">Back</button><button class="btn" data-go="4" ${S.date&&S.time!=null&&!S.loading?'':'disabled'}>Continue</button></div>`;
  }
  if(S.step===4){
   const sv=svc(S.svc),b=S.barber==='any'?'Any available barber':barb(S.barber).n,f=S.f;
@@ -91,6 +102,7 @@ function bk(jump){
   <div class="f"><label for="pr">Promo code (optional)</label><input id="pr" value="${esc(S.promo)}" autocapitalize="characters"><div class="err" id="e-pr"></div></div>
   <div class="f"><label for="nt">Notes (optional)</label><textarea id="nt" rows="3">${esc(f.notes)}</textarea></div>
   <div class="f"><label><input type="checkbox" id="tc"> I accept the <a href="#/terms" target="_blank">Terms &amp; Conditions</a></label><div class="err" id="e-tc"></div></div>
+  <div class="err" id="e-form" role="alert"></div>
   <div class="nav2"><button type="button" class="btn ghost" data-go="3">Back</button><button class="btn" type="submit">Confirm booking</button></div></form>`;
  }
  if(S.step===5)h=done();
@@ -101,12 +113,12 @@ const longDate=()=>{const [y,m,d]=S.date.split('-').map(Number);return new Date(
 root.addEventListener('click',e=>{
  const t=e.target.closest('button');if(!t||t.disabled)return;
  if(t.dataset.svc){S.svc=t.dataset.svc;S.step=2;S.time=null;bk(1)}
- else if(t.dataset.b){S.barber=t.dataset.b;S.step=3;S.time=null;bk(1)}
- else if(t.dataset.t){S.time=+t.dataset.t;bk()}
- else if(t.dataset.go){keep();S.step=+t.dataset.go;bk(1)}
+ else if(t.dataset.b){S.barber=t.dataset.b;S.step=3;S.time=null;S.notice='';bk(1);load()}
+ else if(t.dataset.t){S.time=+t.dataset.t;S.notice='';bk()}
+ else if(t.dataset.go){keep();S.step=+t.dataset.go;bk(1);if(S.step===3)load()}
  else if(t.dataset.new){reset();bk(1)}
 });
-root.addEventListener('change',e=>{if(e.target.id==='dt'){const v=e.target.value,lo=e.target.min,hi=e.target.max;S.date=v&&v>=lo&&v<=hi?v:'';S.time=null;bk();if(v&&!S.date)$('#dt',root).insertAdjacentHTML('afterend','<div class="err">Choose a date within the next 60 days.</div>')}});
+root.addEventListener('change',e=>{if(e.target.id==='dt'){const v=e.target.value,lo=e.target.min,hi=e.target.max;S.date=v&&v>=lo&&v<=hi?v:'';S.time=null;S.notice='';bk();if(v&&!S.date)$('#dt',root).insertAdjacentHTML('afterend','<div class="err">Choose a date within the next 60 days.</div>');else if(S.date)load()}});
 root.addEventListener('submit',e=>{
  e.preventDefault();keep();
  const f=S.f,er={};
@@ -127,12 +139,24 @@ function keep(){
  const g=id=>$(id,root)?$(id,root).value:'';
  S.f={name:g('#nm'),email:g('#em'),phone:g('#ph'),notes:g('#nt')};S.promo=g('#pr');
 }
-function finish(){
- const sv=svc(S.svc),n=Math.ceil(sv.m/30);
- const b=S.barber==='any'?(BARB.find(x=>isFree(x.id,S.date,S.time,n))||BARB[0]):barb(S.barber);
- save(Array.from({length:n},(_,i)=>`${S.date}|${b.id}|${S.time+i*30}`));
- const disc=S.promo.trim().toUpperCase()==='FIRSTCUT';
- S.done={sv,b,disc,price:disc?Math.round(sv.p*.9):sv.p,ref:'CC-'+Math.random().toString(36).slice(2,8).toUpperCase()};
+async function finish(){
+ const sv=svc(S.svc),n=Math.ceil(sv.m/30),f=S.f;
+ const disc=S.promo.trim().toUpperCase()==='FIRSTCUT',price=disc?Math.round(sv.p*.9):sv.p;
+ const ref='CC-'+Math.random().toString(36).slice(2,8).toUpperCase();
+ const cands=S.barber==='any'?BARB.filter(x=>isFree(x.id,S.date,S.time,n)):[barb(S.barber)];
+ let b=null;
+ if(LIVE){
+  const btn=$('#frm button[type=submit]',root);btn.disabled=true;btn.textContent='Confirming…';
+  for(const c of cands){
+   try{await rpc('create_booking',{p_ref:ref,p_service:sv.id,p_barber:c.id,p_day:S.date,p_start:S.time,p_duration:sv.m,p_name:f.name.trim(),p_email:f.email.trim(),p_phone:f.phone.trim(),p_notes:f.notes.trim(),p_price:price});b=c;break}
+   catch(e){if(e.status!==409){$('#e-form').textContent='We could not save your booking. Check your connection and try again.';btn.disabled=false;btn.textContent='Confirm booking';return}}
+  }
+  if(!b){S.step=3;S.time=null;S.notice='Sorry, that time was just booked by someone else. Please pick another.';bk(1);await load();return}
+ }else{
+  b=cands[0]||BARB[0];
+  save(Array.from({length:n},(_,i)=>`${S.date}|${b.id}|${S.time+i*30}`));
+ }
+ S.done={sv,b,disc,price,ref};
  S.step=5;bk(1);
 }
 
