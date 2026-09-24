@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cut &amp; Crown Barbers | Pretoria</title>
+<meta name="description" content="Premium cuts, fades and grooming in Pretoria. Book your barber, service, date and time online.">
+<meta name="theme-color" content="#1c1a17">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231c1a17'/%3E%3Cpath d='M6 24 4 10l7 6 5-10 5 10 7-6-2 14z' fill='%23c39a4a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero.jpg" fetchpriority="high">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="crown" viewBox="0 0 32 32"><path d="M5 25 3 10l7 6 6-10 6 10 7-6-2 15z" fill="currentColor"/><path d="M5 28h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol></svg>
+
+<header>
+<div class="wrap bar">
+<a class="logo" href="#/" aria-label="Cut &amp; Crown home"><svg><use href="#crown"/></svg>Cut &amp; Crown</a>
+<button id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span></button>
+<nav id="nav" aria-label="Main">
+<a href="#/" data-n="home">Home</a>
+<a href="#/services" data-n="services">Services</a>
+<a href="#/about" data-n="about">About</a>
+<a href="#/contact" data-n="contact">Contact</a>
+<a href="#/book" class="btn" data-n="book">Book now</a>
+</nav>
+</div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section data-p="home">
+<div class="hero"><div class="wrap">
+<div>
+<h1>Look sharp.<br><em>Feel confident.</em></h1>
+<p class="lead">Precision cuts, fades and beard work in the heart of Pretoria. Pick your barber, pick your time, and we'll have the chair ready.</p>
+<div class="cta"><a class="btn" href="#/book">Book appointment</a><a class="btn ghost" href="#/services">View services</a></div>
+<div class="facts"><div><b>Since 2021</b>Family-run</div><div><b>3 barbers</b>Pick yours</div><div><b>7 days</b>Open weekly</div></div>
+</div>
+<div class="pole" role="img" aria-label="Barber pole"></div>
+</div></div>
+
+<div class="sec alt"><div class="wrap">
+<div class="head"><div><h2>Popular services</h2><p class="lead" style="margin:0">Straight pricing, no surprises.</p></div><a class="btn ghost sm" href="#/services">All services</a></div>
+<div class="grid" id="svc-prev"></div>
+</div></div>
+
+<div class="sec"><div class="wrap">
+<h2>Why Cut &amp; Crown</h2><br>
+<div class="grid">
+<div class="card"><h3>Precision</h3><p>Barbers who take their time on the details: clean lines, even fades, sharp finishes.</p></div>
+<div class="card"><h3>A proper chair</h3><p>Hot towels, good coffee and a relaxed shop that isn't in a rush to move you along.</p></div>
+<div class="card"><h3>Easy booking</h3><p>Choose your barber, service, date and time online, then add it to your calendar.</p></div>
+</div></div></div>
+
+<div class="sec alt"><div class="wrap">
+<h2>Meet the barbers</h2><br>
+<div class="grid" id="barb-home"></div>
+</div></div>
+
+<div class="sec"><div class="wrap">
+<h2>What clients say</h2><br>
+<div class="grid">
+<div class="card"><p class="quote">"Best fade I've had in Pretoria. Liam got the blend exactly right first time."</p><p>Sipho M.</p></div>
+<div class="card"><p class="quote">"Booked online in under a minute and the calendar invite was spot on."</p><p>Anika V.</p></div>
+<div class="card"><p class="quote">"Took my son for his first proper cut. Marcus was patient and he loved it."</p><p>Darren P.</p></div>
+</div></div></div>
+
+<div class="band"><div class="wrap"><h2>Your next cut is one click away</h2><p style="margin-inline:auto">Chairs fill up fast on Fridays and Saturdays. Reserve yours now.</p><a class="btn ghost" href="#/book">Book now</a></div></div>
+</section>
+
+<section data-p="services">
+<div class="wrap page-h"><h1>Services</h1><p class="lead">Every price includes a consultation and a finishing style. Times are approximate.</p></div>
+<div class="wrap" style="padding-bottom:5rem" id="svc-all"></div>
+</section>
+
+<section data-p="about">
+<div class="wrap page-h"><h1>Our story</h1></div>
+<div class="wrap two" style="padding-bottom:4rem">
+<p class="lead" style="margin-top:0">Cut &amp; Crown opened in 2021 on Church Street with two chairs and one idea: a haircut should be more than a routine appointment.</p>
+<p class="lead" style="margin-top:0">We blend classic barbering craft with modern styles. Today we run three chairs, keep our books open online, and still know most regulars by name.</p>
+</div>
+<div class="wrap" style="padding-bottom:4rem"><img class="shop" src="img/storefront.jpg" alt="The Cut &amp; Crown shopfront at night, with barber chairs visible through the window" width="1400" height="788" loading="lazy"></div>
+<div class="sec alt"><div class="wrap"><h2>Our barbers</h2><br><div class="grid" id="barb-about"></div></div></div>
+<div class="band"><div class="wrap"><h2>Meet us in the chair</h2><p style="margin-inline:auto">Choose your barber when you book.</p><a class="btn ghost" href="#/book">Book now</a></div></div>
+</section>
+
+<section data-p="contact">
+<div class="wrap page-h"><h1>Find us</h1></div>
+<div class="wrap two" style="padding-bottom:5rem">
+<div>
+<h3>Cut &amp; Crown Barbers</h3>
+<p class="lead" style="margin:.8rem 0">214 Church Street, Arcadia<br>Pretoria, 0083</p>
+<p><a href="tel:+27125550147">+27 12 555 0147</a><br><a href="mailto:hello@cutandcrown.co.za">hello@cutandcrown.co.za</a></p><br>
+<div class="cta"><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=214+Church+Street+Arcadia+Pretoria">Get directions</a><a class="btn ghost" href="#/book">Book appointment</a></div>
+</div>
+<div>
+<h3>Opening hours</h3>
+<ul class="hours"><li><span>Monday to Friday</span><span>09:00 – 18:00</span></li><li><span>Saturday</span><span>08:00 – 17:00</span></li><li><span>Sunday</span><span>10:00 – 15:00</span></li></ul>
+</div>
+</div>
+</section>
+
+<section data-p="book">
+<div class="wrap page-h"><h1>Book your cut</h1></div>
+<div class="wrap" style="padding-bottom:5rem" id="bk" aria-live="polite"></div>
+</section>
+
+<section data-p="terms">
+<div class="wrap page-h"><h1>Terms &amp; Conditions</h1><p class="lead">Last updated 1 September 2026</p></div>
+<div class="wrap doc" style="padding-bottom:5rem">
+<h2>1. Bookings</h2><p>A booking is confirmed once you complete the booking form and see the confirmation screen. Please keep your booking reference. Appointment times are reserved for the service you selected.</p>
+<h2>2. Cancellations and changes</h2><p>Please cancel or reschedule at least 4 hours before your appointment by phone or email. Repeated no-shows may require a deposit for future bookings.</p>
+<h2>3. Late arrivals</h2><p>We hold your slot for 10 minutes. After that we may shorten your service or reschedule you so we don't delay other clients.</p>
+<h2>4. Pricing and payment</h2><p>Prices are in South African rand (ZAR), include VAT and are paid in the shop by cash or card. Prices may change without notice, but the price shown when you book is the price you pay.</p>
+<h2>5. Offers and codes</h2><p>The FIRSTCUT code gives 10% off a first appointment, one use per client, and cannot be combined with other offers.</p>
+<h2>6. Calendar events</h2><p>Calendar files are provided for convenience and use the details you selected. Please check the event in your calendar. The shop's booking record is the final reference.</p>
+<h2>7. Personal information</h2><p>We use your name, email and phone number only to manage your appointment. See our Privacy Policy for details.</p>
+<h2>8. Right to refuse service</h2><p>We may refuse or stop service where staff safety, hygiene or respectful conduct is at risk.</p>
+<h2>9. Changes to these terms</h2><p>We may update these terms from time to time. The version on this page applies at the time you book.</p>
+</div>
+</section>
+
+<section data-p="privacy">
+<div class="wrap page-h"><h1>Privacy Policy</h1></div>
+<div class="wrap doc" style="padding-bottom:5rem">
+<h2>What we collect</h2><p>When you book we ask for your name, email, phone number and any notes you add.</p>
+<h2>How we use it</h2><p>To manage your appointment and contact you about it. We do not sell your information or use it for third-party advertising.</p>
+<h2>Storage</h2><p>This website keeps your recent booking details in your own browser only so that taken time slots are not offered twice on your device.</p>
+<h2>Your rights</h2><p>You can ask us to access, correct or delete your information at hello@cutandcrown.co.za.</p>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="wrap">
+<div class="fg">
+<div><a class="logo" href="#/"><svg><use href="#crown"/></svg>Cut &amp; Crown</a><p style="margin-top:1rem;color:var(--mute);font-size:.95rem">Modern cuts. Classic craft.<br>214 Church Street, Arcadia, Pretoria</p></div>
+<div><h3>Explore</h3><ul><li><a href="#/">Home</a></li><li><a href="#/services">Services</a></li><li><a href="#/about">About</a></li><li><a href="#/contact">Contact</a></li><li><a href="#/book">Book appointment</a></li></ul></div>
+<div><h3>Hours and contact</h3><ul><li>Mon–Fri 09:00–18:00</li><li>Sat 08:00–17:00</li><li>Sun 10:00–15:00</li><li><a href="tel:+27125550147">+27 12 555 0147</a></li><li><a href="mailto:hello@cutandcrown.co.za">hello@cutandcrown.co.za</a></li></ul></div>
+<div><h3>Follow and legal</h3><ul><li><a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.tiktok.com" target="_blank" rel="noopener">TikTok</a></li><li><a href="#/terms">Terms &amp; Conditions</a></li><li><a href="#/privacy">Privacy Policy</a></li></ul></div>
+</div>
+<p class="copy">&copy; 2026 Cut &amp; Crown Barbers. All rights reserved.</p>
+</div>
+</footer>
+
+<dialog id="offer" aria-labelledby="offer-t">
+<button class="x" aria-label="Close offer" id="offer-x">&times;</button>
+<h2 id="offer-t">First visit?</h2>
+<p>Welcome to Cut &amp; Crown. Get 10% off your first appointment.</p>
+<div class="code">FIRSTCUT</div><br>
+<a class="btn" href="#/book" id="offer-go">Book now</a>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
