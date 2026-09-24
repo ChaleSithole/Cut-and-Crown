@@ -174,15 +174,17 @@ function calendar(){
  'BEGIN:VEVENT',`UID:${ref}@cutandcrown.co.za`,`DTSTAMP:${stamp}`,`DTSTART;TZID=Africa/Johannesburg:${st}`,`DTEND;TZID=Africa/Johannesburg:${en}`,
  `SUMMARY:${x(title)}`,`LOCATION:${x(LOC)}`,`DESCRIPTION:${x(det)}`,'STATUS:CONFIRMED',
  'BEGIN:VALARM','TRIGGER:-PT60M','ACTION:DISPLAY','DESCRIPTION:Appointment in 1 hour','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
- let url;try{url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}))}catch{url='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics)}
- return {google,ics:url};
+ const ua=navigator.userAgent,ios=/iPhone|iPad|iPod/.test(ua)||(ua.includes('Macintosh')&&navigator.maxTouchPoints>1);
+ const data='data:text/calendar;charset=utf-8,'+encodeURIComponent(ics);
+ let url=data;if(!ios){try{url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}))}catch{}}
+ return {google,ics:url,ios};
 }
 function done(){
  const {sv,b,price,disc,ref}=S.done,c=calendar(),f=S.f;
  return `<div class="ok"><div class="tick" aria-hidden="true">&#10003;</div><h2>You're booked, ${esc(f.name.trim().split(' ')[0])}</h2>
  <p class="lead" style="margin-inline:auto">Show your reference when you arrive.</p>
  <div class="sum"><div><span>Service</span><b>${sv.n}</b></div><div><span>Barber</span><b>${b.n}</b></div><div><span>Date</span><b>${longDate()}</b></div><div><span>Time</span><b>${hm(S.time)} – ${hm(S.time+sv.m)}</b></div><div><span>Price</span><b>R${price}${disc?' (10% off)':''}</b></div><div><span>Location</span><b>214 Church Street, Arcadia, Pretoria</b></div><div><span>Reference</span><b>${ref}</b></div></div>
- <div class="cta"><a class="btn" target="_blank" rel="noopener" href="${c.google}">Add to Google Calendar</a><a class="btn ghost" href="${c.ics}" download="cut-and-crown-${ref}.ics">Add to Apple Calendar (.ics)</a></div>
+ <div class="cta"><a class="btn" target="_blank" rel="noopener" href="${c.google}">Add to Google Calendar</a><a class="btn ghost" href="${c.ics}"${c.ios?'':` download="cut-and-crown-${ref}.ics"`}>Add to Apple Calendar</a></div>
  <div class="nav2" style="justify-content:center"><button class="btn ghost sm" data-new="1">Book another appointment</button></div></div>`;
 }
 
